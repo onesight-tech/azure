@@ -1,5 +1,7 @@
 
-We have created few custom policies which we think as a good start to implement cost restriction. We are not discussing on the steps or methods to create custom policies.
+We have created few custom policies which we think as a good start to implement cost restriction. 
+
+> Not discussed: We are not discussing on the steps or methods to create custom policies, and the scope you have to assign these policies in your subscription.
 
 Please note - the policies we suggested are good for non-production environments, and the parameter values or need for each of the policies varies depends on the requirements.
 
