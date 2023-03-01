@@ -1,0 +1,62 @@
+{
+    "mode": "All",
+    "displayName": "Restricting SKU tier of PostgreSQL",
+    "policyType": "Custom",
+    "description": "Choose the effect, when PostgreSQL being deployed or updated of SKU tier and name other than allowed in parameters",
+    "parameters": {
+        "allowedSkuTiers": {
+            "type": "Array",
+            "allowedValues": [
+                "Standard_B2s",
+                "Standard_B1ms"
+            ],
+            "defaultValue": ["Standard_B2s"],
+            "metadata": {
+                "displayName": "Allowed SKU tiers of PostgreSQL"
+            }
+        },
+        "allowedSkuNames": {
+            "type": "String",
+            "allowedValues": [
+                "Burstable",
+                "GeneralPurpose",
+                "MemoryOptimized"
+            ],
+            "defaultValue": "Burstable",
+            "metadata": {
+                "displayName": "Allowed SKU names of PostgreSQL"
+            }
+        },
+        "effectType": {
+            "type": "string",
+            "allowedValues": [
+                "Audit",
+                "Deny",
+                "Disabled"
+            ],
+            "metadata": {
+                "displayName": "Effect of the policy"
+            }
+        }
+    },
+    "policyRule": {
+        "if": {
+            "allOf": [{
+                    "field": "type",
+                    "equals": "Microsoft.DBforPostgreSQL/flexibleServers"
+                },
+                {
+                    "field": "Microsoft.DBforPostgreSQL/flexibleServers/sku.tier",
+                    "notIn": "[parameters('allowedSkuTiers')]"
+                },
+                {
+                    "field": "Microsoft.DBforPostgreSQL/flexibleServers/sku.name",
+                    "notEquals": "[parameters('allowedSkuNames')]"
+                }
+            ]
+        },
+        "then": {
+            "effect": "[parameters('effectType')]"
+        }
+    }
+}

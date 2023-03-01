@@ -1,0 +1,22 @@
+{
+    "mode": "All",
+    "displayName": "Denying premium storage account",
+    "policyType": "Custom",
+    "description": "Denying storage account creation with Premium SKU tier",
+    "policyRule": {
+        "if": {
+            "allOf": [{
+                    "field": "type",
+                    "equals": "Microsoft.Storage/storageAccounts"
+                },
+                {
+                    "field": "Microsoft.Storage/storageAccounts/sku.tier",
+                    "equals": "Premium"
+                }
+            ]
+        },
+        "then": {
+            "effect": "deny"            
+        }
+    }
+}

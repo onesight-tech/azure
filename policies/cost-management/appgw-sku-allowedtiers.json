@@ -1,0 +1,46 @@
+{
+    "mode": "All",
+    "displayName": "Allowed Application Gateway SKU tiers",
+    "policyType": "Custom",
+    "description": "Choose the effect, when application gateway is being deployed without Standard tier.",
+    "parameters": {
+        "allowedSkuTiers": {
+            "type": "Array",
+            "allowedValues": [
+                "Standard",
+                "Standard_v2"
+            ],
+            "defaultValue": ["Standard"],
+            "metadata": {
+                "displayName": "Allowed SKU tier for Application Gateway"
+            }
+        },
+        "effectType": {
+            "type": "string",
+            "allowedValues": [
+                "Audit",
+                "Deny",
+                "Disabled"
+            ],
+            "metadata": {
+                "displayName": "Effect of the policy"
+            }
+        }
+    },
+    "policyRule": {
+        "if": {
+            "allOf": [{
+                    "field": "type",
+                    "equals": "Microsoft.Network/applicationGateways"
+                },
+                {
+                    "field": "Microsoft.Network/applicationGateways/sku.tier",
+                    "notIn": "[parameters('allowedSkuTiers')]"
+                }
+            ]
+        },
+        "then": {
+            "effect": "[parameters('effectType')]"
+        }
+    }
+}

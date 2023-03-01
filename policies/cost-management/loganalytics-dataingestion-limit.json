@@ -1,0 +1,57 @@
+{
+    "mode": "All",
+    "displayName": "Limiting loganalytics data ingestion capacity",
+    "policyType": "Custom",
+    "description": "Choose the effect, when log analytics being deployed or updated of daily qutoa >= 10 GB",
+    "parameters": {
+        "lstLogAnalytics": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Log Analyitcs workspace",
+                "description": "The target Log Analytics Workspace",
+                "strongType": "omsWorkspace"
+            }
+        },
+        "dailyQuota": {
+            "type": "string",
+            "defaultValue": "10",
+            "metadata": {
+                "displayName": "Daily Quota (GB)"
+            }
+        },
+        "effectType": {
+            "type": "string",
+            "allowedValues": [
+                "Audit",
+                "Deny",
+                "Disabled"
+            ],
+            "metadata": {
+                "displayName": "Effect of the policy"
+            }
+        }
+    },
+    "policyRule": {
+        "if": {
+            "allOf": [{
+                    "field": "type",
+                    "equals": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                    "field": "microsoft.operationalinsights/workspaces/workspaceCapping.dailyQuotaGb",
+                    "greaterOrEquals": "[parameters('dailyQuota')]"
+                },
+                {
+                    "anyOf": [{
+                            "field": "name",
+                            "equals": "[parameters('lstLogAnalytics')]"
+                        }
+                    ]
+                }
+            ]                        
+        },
+        "then": {
+            "effect": "[parameters('effectType')]"
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "mode": "All",
+    "displayName": "Allowed SQL MI vCores size",
+    "policyType": "Custom",
+    "description": "Choose the effect, when SQL MI deployed with vCores greater than mentioned in parameter",
+    "parameters": {
+        "sqlMiVcoresMax": {
+            "type": "Integer",
+            "defaultValue": 24,
+            "metadata": {
+                "displayName": "Maximum vCores allowed for an SQL-MI"
+            }
+        },
+        "effectType": {
+            "type": "string",
+            "allowedValues": [
+                "Audit",
+                "Deny",
+                "Disabled"
+            ],
+            "metadata": {
+                "displayName": "Effect of the policy"
+            }
+        }
+    },
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Sql/managedInstances"
+                },
+                {
+                    "field": "Microsoft.Sql/managedInstances/vCores",
+                    "greaterOrEquals": "[parameters('sqlMiVcoresMax')]"
+                }
+            ]
+        },
+        "then": {
+            "effect": "[parameters('effectType')]"
+        }
+    }
+}
